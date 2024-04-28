@@ -59,10 +59,72 @@ All commands are run from the root of the project, from a terminal:
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
 
-## 👀 Want to learn more?
+## バッチ実行
 
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+batch/load_contents.tx
+ブログの前読み込み
 
-## Credit
+- output
+  - 2015
+  - ・・・
+  - 2024
+    - 01
+      - 各記事
+      - 各記事
+    - 02
+      - 各記事
+      - 各記事
 
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+node20 系では ts-node ではなく以下のコマンド
+
+```
+npx tsx ファイルパス
+```
+
+## mongo で user 作成
+
+docker 起動時に自動的に読み込まれて下記のユーザーが作成されている
+
+```
+   // 管理者権限
+  {
+    _id: 'admin.admin',
+    userId: UUID('xxxxxx'),
+    user: 'admin',
+    db: 'admin',
+    credentials: {
+      'SCRAM-SHA-1': {
+        ・・・・
+      },
+      'SCRAM-SHA-256': {
+        ・・・・
+      }
+    },
+    roles: [ { role: 'userAdminAnyDatabase', db: 'admin' } ]
+  },
+  // ユーザー権限
+  {
+    _id: 'blog.bloguser',
+    userId: UUID('xxxxx'),
+    user: 'bloguser',
+    db: 'blog',
+    credentials: {
+      'SCRAM-SHA-1': {
+        ・・・・
+      },
+      'SCRAM-SHA-256': {
+        ・・・・
+      }
+    },
+    roles: [ { role: 'readWrite', db: 'blog' } ]
+  }
+]
+```
+
+ログイン時には下記
+
+```
+mongosh -u bloguser -p blogpass --authenticationDatabase "blog"
+```
+
+mongo どうやら最初は認証ロジックが効いていない模様・・・
