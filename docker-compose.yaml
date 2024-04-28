@@ -1,0 +1,37 @@
+version: "3"
+services:
+  node:
+    container_name: astro_node
+    build:
+      context: "./docker/node"
+      dockerfile: "Dockerfile"
+    ports:
+      - 3000:3000
+      - 4321:4321
+      - 8080:8080
+    tty: true
+    volumes:
+      - ./app:/app
+    networks:
+      - astro_node
+    depends_on:
+      - mongo
+
+  mongo:
+    container_name: astro_mongo
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo/init:/docker-entrypoint-initdb.d
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: pass
+      TZ: Asia/Tokyo
+    networks:
+      - astro_node
+
+networks:
+  astro_node:
+    driver: "bridge"
